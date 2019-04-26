@@ -1,24 +1,31 @@
 // собираем все якоря; устанавливаем время анимации и количество кадров
-	const anchors = [].slice.call(document.querySelectorAll('a[href*="#"]')),
-		animationTime = 300,
-		framesCount = 20;
+	var ancors = screen.querySelectorAll('.js__ancor'); 
 
-	anchors.forEach(function(item) {
 
-		// каждому якорю присваиваем обработчик события
-		item.addEventListener('click', function(e) {
-			checkPopup();
+	ancors.forEach(function(ancor) {
+		// для плавного перехода к полным правилам с попапа, якорю присваиваем обработчик события
+		ancor.addEventListener('click', function(e) {
+
+			// устанавливаем время анимации и количество кадров
+			var animationTime = 1000,
+				framesCount = 20;
 
 			// убираем стандартное поведение
 			e.preventDefault();
+
+			// для каждого якоря берем соответствующий ему элемент и определяем его координату Y если несколько корей
+			//let coordY = document.querySelector(item.getAttribute('href')).getBoundingClientRect().top;
+
+			//если один якорь определяем положение скролла
+			var scroll = window.pageYOffset || document.documentElement.scrollTop
 			
-			// для каждого якоря берем соответствующий ему элемент и определяем его координату Y
-			let coordY = document.querySelector(item.getAttribute('href')).getBoundingClientRect().top;
+			// определяем координату Y до элемента соответствующему якорю
+			var coordY = rules.getBoundingClientRect().top + scroll;
 			
 			// запускаем интервал, в котором
-			let scroller = setInterval(function() {
+			var scroller = setInterval(function() {
 				// считаем на сколько скроллить за 1 такт
-				let scrollBy = coordY / framesCount;
+				var scrollBy = coordY / framesCount;
 				
 				// если к-во пикселей для скролла за 1 такт больше расстояния до элемента
 				// и дно страницы не достигнуто
@@ -33,4 +40,4 @@
 			// время интервала равняется частному от времени анимации и к-ва кадров
 			}, animationTime / framesCount);
 		});
-	});
+	})

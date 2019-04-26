@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<style type="text/css">
+
+    [data-view="pre"] .biblionight-banner {
+        display: flex;
+    }
+    [data-view="pre"] .biblionight-banner__timer{
+        display: none;
+    }
+    [data-view="timer"] .biblionight-banner {
+        display: none;
+    }
+    [data-view="timer"] .biblionight-banner__timer{
+        display: flex;
+    }
+
+    .header-features.biblionight {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 85px;
+    }
+    .biblionight-banner__timer {
+        color: white;
+        font-size: 12px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    [data-view="pre"] {
+        background-color: #0060B2;
+    }
+
+    [data-view="pre"] .biblionight-img {
+        background: url(/ii/img/events/biblionight/beforeBnLittle.png) no-repeat;
+        background-size: 100% 100%;
+        width: 940px;
+        height: 85px;
+    }
+
+    [data-view="timer"] {
+        background-color: #0062B3;
+    }
+
+    .biblionight-img {
+        background: url(/ii/img/events/biblionight/bnLittle.png) no-repeat;
+        width: 576px;
+        height: 85px;
+    }
+    .biblionight-condition {
+        background: url(/ii/img/events/biblionight/bnConditionLittle.png) no-repeat;
+        width: 192px;
+        height: 85px;
+    }
+    .biblionight-timer {
+        width: 172px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+    }
+    .biblionight-timer__title {
+        margin: 0 auto;
+    }
+    .biblionight-timer .timer {
+        display: flex;
+        align-items: center;
+        padding-top: 5px;
+        margin: 0 auto;
+    }
+
+    .biblionight-timer .sep {
+        width: 6px;
+        font-weight: bold;
+        display: block;
+        position: relative;
+        text-align: center;
+        flex-shrink:0;
+        flex-grow: 0;
+        font-size: 0;
+    }
+
+    .biblionight-timer .sep:before,
+    .biblionight-timer .sep:after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background-color: white;
+        border-radius:50px;
+        top: 50%;
+        left: 2px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .biblionight-timer .sep:before {
+        margin-top: -3px
+    }
+
+    .biblionight-timer .sep:after {
+        margin-top: 3px
+    }
+
+    .biblionight-timer .h,
+    .biblionight-timer .m,
+    .biblionight-timer .s {
+        display: flex;
+
+    }
+    .biblionight-timer .time-el {
+        display: inline-block;
+        width: 19px;
+        height: 30px;
+        border: 2px solid;
+        border-radius: 2px;
+        font-family: 'PT Mono', 'PT Sans', sans-serif;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 1px;
+    }
+    @media screen and (min-width: 1400px) {
+        [data-view="pre"] .biblionight-img {
+            background: url(/ii/img/events/biblionight/beforeBnBig.png) no-repeat;
+            width: 1260px;
+        }
+        .biblionight-img {
+            background: url(/ii/img/events/biblionight/bnBig.png) no-repeat;
+            width: 792px;
+        }
+        .biblionight-condition {
+            background: url(/ii/img/events/biblionight/bnConditionBig.png) no-repeat;
+            width: 288px;
+        }
+        .biblionight-timer {
+            width: 180px;
+        }
+        .biblionight-timer:before {
+            background-position:
+                    right 25px bottom 20px,
+                    right 60px top 20px;
+        }
+    }
+
+</style>
+<body>
+    <div class="header-features biblionight js__banner_type" data-view="{{ data_view }}">
+        <svg class="header-features__close" onclick="events.hideHeaderBanner(this.parentElement)" width="16" height="16">
+            <use xlink:href="#close-icon" href="#close-icon"></use>
+        </svg>
+
+        <div class="container">
+            {#баннер до 19.04.19#}
+            <a href="/events/biblionight" class="biblionight-banner">
+                <div class="biblionight-img"></div>
+            </a>
+
+            {#баннер 19.04.19#}
+            <div class="biblionight-banner__timer">
+                <span class="biblionight-img"></span>
+                <span class="biblionight-timer">
+                    <span class="biblionight-timer__title">До конца акции осталось:</span>
+                    <span class="timer" id="biblionight-timer">
+                        <span class="h">
+                            <span class="h_1 time-el"></span>
+                            <span class="h_2 time-el"></span>
+                        </span>
+                        <span class="sep"></span>
+                        <span class="m">
+                            <span class="m_1 time-el"></span>
+                            <span class="m_2 time-el"></span>
+                        </span>
+                        <span class="sep"></span>
+                        <span class="s">
+                            <span class="s_1 time-el"></span>
+                            <span class="s_2 time-el"></span>
+                        </span>
+                    </span>
+                </span>
+                <span class="biblionight-condition"></span>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function(){ 
+        // текущая дата локально
+        var now = new Date();
+
+        // сдвиг на московское время
+        var moscowOffset = 180 / 60;
+        var offset = now.getTimezoneOffset() / 60 + moscowOffset;
+
+        // текущее время по москве
+        now.setHours(now.getHours() + offset);
+
+        // старт акции по москве
+        var start = new Date(2019, 3, 19, 0, 0, 0);
+        start.setHours(start.getHours() - offset);
+
+        // конец акции по москве
+        var finish = new Date(2019, 3, 19, 23, 59, 59);
+        finish.setHours(finish.getHours() - offset);
+
+        var setBiblionightTimer = (function () {
+            var $timer = document.getElementById('biblionight-timer');
+            var $h1 = $timer.querySelector('.h_1');
+            var $h2 = $timer.querySelector('.h_2');
+            var $m1 = $timer.querySelector('.m_1');
+            var $m2 = $timer.querySelector('.m_2');
+            var $s1 = $timer.querySelector('.s_1');
+            var $s2 = $timer.querySelector('.s_2');
+
+            return function (ms) {
+                ms = ms / 1000;
+                var seconds = Math.floor(ms % 60);
+                var minutes = Math.floor((ms / 60) % 60);
+                var hours = Math.floor((ms / (60 * 60)) % 24);
+
+                var s2 = seconds % 10;
+                var s1 = Math.floor(seconds / 10);
+
+                var m2 = minutes % 10;
+                var m1 = Math.floor(minutes / 10);
+
+                var h2 = hours % 10;
+                var h1 = Math.floor(hours / 10);
+
+                $h1.textContent = h1;
+                $h2.textContent = h2;
+                $m1.textContent = m1;
+                $m2.textContent = m2;
+                $s1.textContent = s1;
+                $s2.textContent = s2;
+            }
+        })();
+
+
+        //показать баннер
+        function showBiblionightBanner() {
+            $('.biblionight-banner__timer').removeClass('hidden');
+
+            //меняем дата-атрибут для применения некоторых стилей
+            $('.header-features.biblionight').attr('data-biblionight', 'timer');
+        }
+
+        //скрыть баннер
+        function hideBiblionightBanner() {
+            $('.header-features[data-biblionight]').fadeOut(400);
+        }
+
+
+        function startBiblionight(finish) {
+            // текущая дата локальная
+            var now = new Date();
+
+            var diff = finish - now;
+
+            if (diff < 0) {
+                setBiblionightTimer(0);
+                return;
+            }
+            setBiblionightTimer(diff);
+            showBiblionightBanner();
+
+            var timer = setInterval(function () {
+                now = Date.now();
+                diff = finish - now;
+                if (diff < 0) {
+                    clearInterval(timer);
+                    hideBiblionightBanner();
+                    return;
+                }
+                setBiblionightTimer(diff);
+            }, 1000);
+        }
+
+       
+        if (now >= start && now <= finish) {
+            $('.biblionight-banner').fadeOut(400);
+            startBiblionight(finish);
+        } else if (now < start){
+            $('.biblionight-banner').fadeIn(400);
+        }
+        
+
+        
+
+
+        // ф-я  запуска таймера обратного отсчета
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10)
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+                // если таймер достиг значения меньше 10сек, то подсветить красным
+                if (--timer < 10) {
+
+                    display.classList.add('task__timer_warning');
+
+                    // если таймер достиг нуля, то 
+                    if (timer < 0) {
+                        //остановить таймер
+                        timer = 0;
+
+                        // что-то сделать по истечении времени, н-р, показать экран со статистикой
+                        screenGame.dataset.gameType = 'statistics';
+
+                        //анимация появления диатогового окна
+                        TweenMax.fromTo(statistic, 1, {y: -gameContentHeight}, {y: 0, ease: Linear.easeInOut});
+
+                        //выходим из функции
+                        return
+                    }
+                }
+                
+            }, 1000);
+        }
+
+        // навешиваем событие на кнопку "я готов!"
+        btnStart.addEventListener('click', function(){
+            var fiveMinutes = 60 * 5,//устанавливаем время в секундах
+                display = document.querySelector('.task__timer'); // указываем в каком блоке отобразить таймер
+
+            //запускаем таймер  
+            startTimer(fiveMinutes, display);
+        })
+    })
+</script>           
+</html>
+
+
+
+        
+          
+ 
+

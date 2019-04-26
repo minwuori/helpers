@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style type="text/css">
+
+.before,.after {
+	background: pink;
+	height: 1500px;
+}
+
+/* game */
+.game {
+  position: relative;
+  height: auto;
+  transition: opacity 300ms;
+  font-size: inherit;
+  color: black;
+  height: 1500px;
+}
+
+.game .container {
+  position: relative;
+}
+
+.game__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.game__title {
+  max-width: 90%;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 25px;
+  text-align: center;
+  font-weight: normal;
+}
+
+/* avatar */
+.avatar {
+  position: absolute;
+  top: 0px;
+  bottom: auto;
+  right: 75px;
+  max-width: 100px;
+  cursor: pointer;
+  z-index: 4;
+  display: block;
+}
+
+
+[data-avatar-position="fixed"] {
+    position: fixed;
+    bottom: 50px; 
+    top: auto;
+}
+
+[data-avatar-position="absolute"] {
+    position: absolute;
+    bottom: 50px; 
+    top: auto;
+}
+
+figcaption {
+  font-weight: bold;
+  text-align: center;
+  color: blue;
+}
+
+/* avatar end */
+
+</style>
+<body>
+	<section class="before"></section>
+	<section class="game" data-popup-rules="" data-game-type="">
+	  <div class="container">
+	    <div class="game__header">
+	      <div class="game__title">
+	        <!-- до 13 мая-->
+	        <div class="game__title_before"><span class="accent">
+	             С 13 мая </span>на этой странице будут появляться вопросы и задания. <br/>Получайте баллы за правильные ответы и обменивайте их на <span class="accent">
+	             скидку до 15%.</span></div>
+	        <!-- во время игр с парами-->
+	        <div class="game__title_pairs"><span class="accent">Сегодня </span>вас ждёт вопрос о Республике Коми. <br/>За правильный ответ вы получите <span class="accent">1 балл. </span>Успейте отгадать все пары за одну минуту.</div>
+	        <!-- во время игр вопросов-->
+	        <div class="game__title_questions"><span class="accent">Сегодня </span>вас ждёт вопрос о Республике Коми. <br/>За правильный ответ вы получите <span class="accent">1 балл. </span></div>
+	      </div>
+	      <!-- с 13 по 19 мая	-->
+	      <button class="btn btn-participate js__btn_participate" type="button" value="Начать игру">Начать игру</button>
+	    </div>
+	    
+	  <figure class="avatar js__avatar" data-avatar-position="">
+	  	<img src="/ii/img/events/7years/avatar.svg" alt="аватар медведя"/>
+	    <figcaption>Как играть? </figcaption>
+	  </figure>
+	</section>
+	<section class="after"></section>
+</body>
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function(){ 
+		// фиксация аватарки медведя внутри экрана с игрой
+		var avatarFix = (function() {
+			window.onscroll = function() {
+				var scroll = window.pageYOffset || document.documentElement.scrollTop, // определяем положение ползунка
+					screen = document.querySelector('.game'), // поле для фиксируемого элемента
+					avatar = document.querySelector('.js__avatar'), //фиксируемый элемент
+					posY = screen.getBoundingClientRect().top + scroll, // получаем координату верхней границы окна для фиксируемого элемента
+					screenHeight = screen.offsetHeight - 100, // высота экрана
+					avatarHeight = avatar.offsetHeight, // высота фиксируемого элемента
+					stop = screenHeight + document.querySelector('.after').getBoundingClientRect().top - avatarHeight*2; // нижняя граница для фиксируемого элемента
+
+				//если позиция скролла достигла экрана с игрой, то фиксируем аватарку
+				if( scroll > (screen.getBoundingClientRect().top - avatarHeight)) {
+					avatar.dataset.avatarPosition = "fixed";
+				
+				//если позиция скролла 	меньше, то возвращаем к исходному(абсолют кверху)
+				} else {
+					avatar.dataset.avatarPosition = "";
+				}
+				
+				//если позиция скролла достигла низа экрана, то позиционируем аватарку абсолютом книзу
+				if (scroll >= stop) {
+					avatar.dataset.avatarPosition = "absolute";
+				
+				} 
+			}
+		})();
+	});
+</script>
+</html>
+
+
